@@ -1,0 +1,34 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      dockerfile: Dockerfile
+      context: .
+    ports:
+      - "8080:8080"
+    env_file:
+      - cmd/auction/.env
+    command: sh -c "/auction"
+    networks:
+      - localNetwork
+
+  mongodb:
+    image: mongo:latest
+    container_name: mongodb
+    ports:
+      - "27017:27017"
+    env_file:
+      - cmd/auction/.env
+    volumes:
+      - mongo-data:/data/db
+    networks:
+      - localNetwork
+
+volumes:
+  mongo-data:
+    driver: local
+
+networks:
+  localNetwork:
+    driver: bridge
